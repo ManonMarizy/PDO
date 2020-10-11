@@ -2,27 +2,30 @@
 require_once '../_connec.php';
 
 $pdo = new \PDO(DSN, USER, PASS);
+if (isset($_POST['lastname']) && isset($_POST['firstname']) && isset($_POST['btnSend'])) {
+    
+    $lastname = trim($_POST['lastname']);
+    $firstname = trim($_POST['firstname']);
+    $errors = [];
 
-$lastname = trim($_POST['lastname']);
-$firstname = trim($_POST['firstname']);
-$errors = [];
-if (empty($lastname))
-    $errors['lastname'] = 'Required';
-if(strlen($lastname) > 45)
-    $errors['lastname'] = 'Lastname too long';
-if (empty($firstname))
-    $errors['firstname'] = 'Required';
-if(strlen($lastname) > 45)
-    $errors['firstname'] = 'Firstname too long';
+    if (empty($lastname))
+        $errors['lastname'] = 'Required';
+    if(strlen($lastname) > 45)
+        $errors['lastname'] = 'Lastname too long';
+    if (empty($firstname))
+        $errors['firstname'] = 'Required';
+    if(strlen($lastname) > 45)
+        $errors['firstname'] = 'Firstname too long';
 
-if (!empty($_POST['lastname']) && !empty($_POST['firstname']) && isset($_POST['btnSend'])) {
-    $query = "INSERT INTO friend (firstname, lastname) VALUES (:firstname, :lastname)";
-    $statement=$pdo->prepare($query);
-    $statement->bindValue(':lastname', $lastname, \PDO::PARAM_STR);
-    $statement->bindValue(':firstname', $firstname, \PDO::PARAM_STR);
-    $statement->execute();
-    header("Location: index.php");
-}
+    if (!empty($_POST['lastname']) && !empty($_POST['firstname']) && isset($_POST['btnSend'])) {
+        $query = "INSERT INTO friend (firstname, lastname) VALUES (:firstname, :lastname)";
+        $statement=$pdo->prepare($query);
+        $statement->bindValue(':lastname', $lastname, \PDO::PARAM_STR);
+        $statement->bindValue(':firstname', $firstname, \PDO::PARAM_STR);
+        $statement->execute();
+        header("Location: index.php");
+    }
+}    
 $query = "SELECT * FROM friend";
 $statement = $pdo->query($query);
 $friends = $statement->fetchAll();
